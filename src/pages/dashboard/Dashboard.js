@@ -1,34 +1,43 @@
-import { Container } from '@material-ui/core';
+import { gql, useQuery } from '@apollo/client';
+import { Box, Container, Typography } from '@material-ui/core';
 import CountryCardList from './CountryCardList';
 
+export const GET_COUNTRIES = gql`
+  query GetCountries {
+    countries: Country {
+      id: _id
+      code: alpha3Code
+      name
+      capital
+      flag {
+       url: svgFile
+      }
+    }
+  }
+`;
+
+function Message({ text }) {
+  return (
+    <Box marginTop={10}>
+      <Typography component='p' variant='h1' align='center'>
+        {text}
+      </Typography>
+    </Box>
+  );
+}
+
 export default function Dashboard() {
-  const countries = [
-    {
-      id: '1',
-      code: 'BRA',
-      name: 'Brazil',
-      capital: 'Brasília',
-      flag: { url: 'https://restcountries.eu/data/bra.svg' }
-    },
-    {
-      id: '2',
-      code: 'ARG',
-      name: 'Argentina',
-      capital: 'Buenos Aires',
-      flag: { url: 'https://restcountries.eu/data/arg.svg' }
-    },
-    {
-      id: '3',
-      code: 'USA',
-      name: 'United States of America',
-      capital: 'Washington, D.C.',
-      flag: { url: 'https://restcountries.eu/data/usa.svg' }
-    },
-  ];
+  const { data: { countries } = {}, loading, error } = useQuery(GET_COUNTRIES);
+
+  if (loading)
+    return <Message text='Loading...' />;
+
+  if (error)
+    return <Message text='Failed to load...' />;
 
   return (
     <Container>
-      <CountryCardList countries={countries}  />
+      <CountryCardList countries={countries} />
     </Container>
   );
 }
