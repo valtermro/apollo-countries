@@ -1,7 +1,5 @@
-import { Typography } from '@material-ui/core';
+import Dashboard from './pages/dashboard/Dashboard';
 
 export default function App() {
-  return (
-    <Typography variant='h1'>Apollo countries</Typography>
-  );
+  return <Dashboard />;
 }
