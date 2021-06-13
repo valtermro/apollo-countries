@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
-import { Box, Container, Typography, Toolbar } from '@material-ui/core';
+import { Box, Toolbar, Container, Typography } from '@material-ui/core';
 import SearchForm from './SearchForm';
 import CountryCardList from './CountryCardList';
 
@@ -30,15 +30,16 @@ function Message({ text }) {
   );
 }
 
-function SearchBar({ onSubmitSearch }) {
+function HeaderBar({ children, ...props }) {
   return (
     <Toolbar>
-      <Box width={680} margin='auto' paddingTop={6} paddingBottom={2}>
-        <SearchForm onSubmit={onSubmitSearch} />
+      <Box width={680} margin='auto' {...props}>
+        {children}
       </Box>
     </Toolbar>
   );
 }
+
 
 export default function Dashboard() {
   const [searchStr, setSearchStr] = useState('');
@@ -50,7 +51,9 @@ export default function Dashboard() {
 
   return (
     <>
-      <SearchBar onSubmitSearch={setSearchStr} />
+      <HeaderBar paddingTop={4} paddingBottom={2}>
+        <SearchForm onSubmit={setSearchStr} />
+      </HeaderBar>
 
       <Container>
         {loading ? (

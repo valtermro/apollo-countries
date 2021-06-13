@@ -1,9 +1,9 @@
-import { Link } from 'react-router-dom';
 import {
-  Box, Typography, Button,
+  Box, Typography,
   Card, CardHeader, CardMedia, CardContent, CardActions,
-  makeStyles,
+  makeStyles
 } from '@material-ui/core';
+import { Anchor } from '../../components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,10 +31,6 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'flex-end'
   }
 }));
-
-function Anchor(props) {
-  return <Button component={Link} role='link' color='primary' {...props} />;
-}
 
 export default function CountryCard({ country }) {
   const classes = useStyles();

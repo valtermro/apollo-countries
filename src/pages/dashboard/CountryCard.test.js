@@ -13,7 +13,7 @@ function render(component) {
 describe('CountryCard', () => {
   const country = {
     id: '1',
-    code: 'CD1',
+    code: 'CA1',
     name: 'Country 1',
     capital: 'Capital 1',
     flag: { url: 'flag1.svg' }
@@ -21,7 +21,7 @@ describe('CountryCard', () => {
 
   afterEach(cleanup);
 
-  it('renders the flag of the country', () => {
+  it('renders the flag', () => {
     const root = render(<CountryCard country={country} />);
 
     const imgEl = root.getByRole('img');
@@ -29,7 +29,7 @@ describe('CountryCard', () => {
     expect(imgEl).toHaveAttribute('alt', `${country.name}'s flag`);
   });
 
-  it('displays the name of the country', () => {
+  it('displays the name', () => {
     const root = render(<CountryCard country={country} />);
 
     root.getByText('Country 1');

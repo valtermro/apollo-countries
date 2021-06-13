@@ -1,17 +1,38 @@
-import { useRouteMatch } from 'react-router-dom';
-import { Box, Container, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Box, Container } from '@material-ui/core';
+import { Anchor } from '../../components';
+import CountryDetails from './CountryDetails';
 
 export default function Details() {
-  const match = useRouteMatch();
-  const { id } = match.params;
+  const country = {
+    code: 'BRA',
+    name: 'Brazil',
+    capital: 'Brasília',
+    population: 206135893,
+    area: 8515767,
+    topLevelDomains: [
+      { name: '.br' }
+    ],
+    flag: {
+      url: 'https://restcountries.eu/data/bra.svg'
+    }
+  };
 
   return (
-    <Container>
-      <Box textAlign='center' padding={8}>
-        <Typography variant='h1'>
-          Details for country id: {id}
-        </Typography>
-      </Box>
-    </Container>
+    <>
+      <AppBar color='default'>
+        <Toolbar>
+          <Anchor to='/'>
+            All countries
+          </Anchor>
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+
+      <Container>
+        <Box display='flex' justifyContent='center' marginTop={4}>
+          <CountryDetails country={country} />
+        </Box>
+      </Container>
+    </>
   );
 }
