@@ -3,7 +3,7 @@ import CountryCard from './CountryCard';
 
 function Empty() {
   return (
-    <Box textAlign='center' marginTop={10}>
+    <Box textAlign='center' marginTop={5}>
       <Typography component='p' variant='h1'>
         Nothing here.
       </Typography>
