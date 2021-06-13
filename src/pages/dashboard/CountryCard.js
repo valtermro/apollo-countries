@@ -1,5 +1,6 @@
+import { Link } from 'react-router-dom';
 import {
-  Box, Link, Typography,
+  Box, Typography, Button,
   Card, CardHeader, CardMedia, CardContent, CardActions,
   makeStyles,
 } from '@material-ui/core';
@@ -31,6 +32,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function Anchor(props) {
+  return <Button component={Link} role='link' color='primary' {...props} />;
+}
 
 export default function CountryCard({ country }) {
   const classes = useStyles();
@@ -56,9 +60,9 @@ export default function CountryCard({ country }) {
         </CardContent>
 
         <CardActions className={classes.actions}>
-          <Link variant='button' href={`/country/${country.id}`}>
+          <Anchor to={`/country/${country.id}`}>
             See more
-          </Link>
+          </Anchor>
         </CardActions>
       </Box>
     </Card>

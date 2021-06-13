@@ -1,5 +1,14 @@
-import { render, within, cleanup } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
+import { render as _render, within, cleanup } from '@testing-library/react';
 import CountryCardList from './CountryCardList';
+
+function render(component) {
+  return _render(
+    <MemoryRouter>
+      {component}
+    </MemoryRouter>
+  );
+}
 
 describe('CountryCardList', () => {
   afterEach(cleanup);

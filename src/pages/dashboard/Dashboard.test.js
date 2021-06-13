@@ -1,11 +1,17 @@
+import { MemoryRouter } from 'react-router';
 import { GraphQLError } from 'graphql';
 import { MockedProvider } from '@apollo/client/testing';
-import { render, act, cleanup } from '@testing-library/react';
+import { render as _render, act, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Dashboard, { GET_COUNTRIES } from './Dashboard';
 
-const loadingText = 'Loading...';
-const loadErrorText = /Failed to load/;
+function render(component) {
+  return _render(
+    <MemoryRouter>
+      {component}
+    </MemoryRouter>
+  );
+}
 
 function waitLoad() {
   return new Promise(resolve => setTimeout(resolve, 0));
@@ -47,6 +53,9 @@ function createMock({ networkError, graphQlErrors }) {
 }
 
 describe('Dashboard', () => {
+  const loadingText = 'Loading...';
+  const loadErrorText = /Failed to load/;
+
   afterEach(cleanup);
 
   it('handles the loading state', () => {

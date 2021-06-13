@@ -1,5 +1,14 @@
-import { render, cleanup } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
+import { render as _render, cleanup } from '@testing-library/react';
 import CountryCard from './CountryCard';
+
+function render(component) {
+  return _render(
+    <MemoryRouter>
+      {component}
+    </MemoryRouter>
+  );
+}
 
 describe('CountryCard', () => {
   const country = {
