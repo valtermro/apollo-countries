@@ -2,16 +2,12 @@ import { Box, Typography, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: '480px'
-  },
-  infoLabel: {
-    fontWeight: 600
+    //
   },
   flag: {
     display: 'block',
-    width: '100%',
-    margin: 0,
-    padding: 0,
+    maxWidth: '60%',
+    margin: 'auto',
     marginBottom: '20px'
   }
 });

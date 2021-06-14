@@ -9,7 +9,7 @@ const theme = createMuiTheme({
       fontSize: 24
     },
     h3: {
-      fontSize: 18
+      fontSize: 20
     }
   }
 });

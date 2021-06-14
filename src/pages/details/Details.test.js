@@ -2,6 +2,7 @@ import { GraphQLError } from 'graphql';
 import { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/client/testing';
 import { render as _render, act, cleanup } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Details, { GET_COUNTRY } from './Details';
 
 function render(component) {
@@ -99,5 +100,46 @@ describe('Details page', () => {
     await act(async () => await waitLoad());
 
     root.getByText('Name: Country 1');
+  });
+
+  it('renders the edit button', async () => {
+    const Mocked = createMock({});
+    const root = render(<Mocked />);
+
+    await act(async () => await waitLoad());
+
+    root.getByRole('button', { name: /edit/i });
+  });
+
+  it('does not render the edit form by default', async () => {
+    const Mocked = createMock({});
+    const root = render(<Mocked />);
+
+    await act(async () => await waitLoad());
+
+    expect(root.queryByRole('form')).toBeNull();
+  });
+
+  it('renders the edit form when the edit button is clicked', async () => {
+    const Mocked = createMock({});
+    const root = render(<Mocked />);
+
+    await act(async () => await waitLoad());
+    userEvent.click(root.queryByRole('button'));
+    await act(async () => await waitLoad());
+
+    root.getByRole('form');
+  });
+
+  it('hides the edit button while editing the country', async () => {
+    const Mocked = createMock({});
+    const root = render(<Mocked />);
+
+    await act(async () => await waitLoad());
+    userEvent.click(root.queryByRole('button'));
+    await act(async () => await waitLoad());
+
+    const editEl = root.queryByRole('button', { name: /edit/i });
+    expect(editEl).toBeNull();
   });
 });

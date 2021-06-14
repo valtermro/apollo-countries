@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { gql, useQuery } from '@apollo/client';
-import { AppBar, Toolbar, Box, Container, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Box, Button, Container, Typography } from '@material-ui/core';
 import { Anchor } from '../../components';
 import CountryDetails from './CountryDetails';
+import EditCountryForm from './EditCountryForm';
 
 export const GET_COUNTRY = gql`
   query GetCountry($id: String!) {
@@ -32,11 +34,41 @@ function Message({ text }) {
   );
 }
 
+function EditSection({ editing, country, onClickEdit, onSubmit, onCancel }) {
+  return (
+    <Box marginTop={4}>
+      {!editing ? (
+        <Box display='flex' justifyContent='flex-end'>
+          <Button variant='contained' color='secondary' onClick={onClickEdit}>
+            Edit
+          </Button>
+        </Box>
+      ) : (
+        <Box>
+          <Typography variant='h3'>
+            Editing country {country.code}
+          </Typography>
+          <EditCountryForm country={country} onSubmit={onSubmit} onCancel={onCancel} />
+        </Box>
+      )}
+    </Box>
+  );
+}
+
 export default function Details({ match: { params } }) {
   const { data = {}, loading, error } = useQuery(GET_COUNTRY, {
     variables: { id: params.id }
   });
   const [country] = data.countries || [];
+  const [isEditingCountry, setIsEditingCountry] = useState(false);
+
+  function toggleIsEditingCountry() {
+    setIsEditingCountry(!isEditingCountry);
+  }
+
+  function handleEditSubmit(data) {
+    // TODO
+  }
 
   return (
     <>
@@ -52,15 +84,25 @@ export default function Details({ match: { params } }) {
       <Toolbar />
 
       <Container>
-        {loading ? (
-          <Message text='Loading...' />
-        ) : error ? (
-          <Message text='Failed to load.' />
-        ) : (
-          <Box display='flex' justifyContent='center' marginTop={4}>
-            <CountryDetails country={country} />
-          </Box>
-        )}
+        <Box display='flex' justifyContent='center' flexWrap='wrap'>
+          {loading ? (
+            <Message text='Loading...' />
+          ) : error ? (
+            <Message text='Failed to load.' />
+          ) : (
+            <Box width='100%' maxWidth='680px' marginTop={4}>
+              <CountryDetails country={country} />
+
+              <EditSection
+                editing={isEditingCountry}
+                country={country}
+                onSubmit={handleEditSubmit}
+                onCancel={toggleIsEditingCountry}
+                onClickEdit={toggleIsEditingCountry}
+              />
+            </Box>
+          )}
+        </Box>
       </Container>
     </>
   );
