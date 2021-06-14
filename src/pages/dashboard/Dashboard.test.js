@@ -54,15 +54,15 @@ function createMock({ networkError, graphQlErrors }) {
 
 describe('Dashboard', () => {
   const loadingText = 'Loading...';
-  const loadErrorText = /Failed to load/;
+  const loadErrorText = 'Failed to load.';
 
   afterEach(cleanup);
 
   it('handles the loading state', () => {
     const Mocked = createMock({});
-    const root = render(<Mocked countries={[]} />);
+    const root = render(<Mocked />);
 
-    root.queryByText(loadingText);
+    root.getByText(loadingText);
   });
 
   it('handles network errors', async () => {

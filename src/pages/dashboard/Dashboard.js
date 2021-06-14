@@ -59,7 +59,7 @@ export default function Dashboard() {
         {loading ? (
           <Message text='Loading...' />
         ) : error ? (
-          <Message text='Failed to load...' />
+          <Message text='Failed to load.' />
         ) : (
           <CountryCardList countries={countries} />
         )}
