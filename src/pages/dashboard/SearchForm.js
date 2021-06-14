@@ -1,5 +1,6 @@
-import { Box, Button, TextField, makeStyles } from '@material-ui/core';
 import { useState } from 'react';
+import { Box, makeStyles } from '@material-ui/core';
+import { Form, TextInput, SubmitButton } from '../../components/form';
 
 const useStyles = makeStyles({
   root: {
@@ -15,15 +16,14 @@ export default function SearchForm({ onSubmit }) {
   const [search, setSearch] = useState('');
   const classes = useStyles();
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  function handleSubmit() {
     onSubmit(search);
   }
 
   return (
-    <form role='search' className={classes.root} onSubmit={handleSubmit}>
+    <Form className={classes.root} role='search' name='Search countries' onSubmit={handleSubmit}>
       <Box display='flex' height='100%'>
-        <TextField
+        <TextInput
           label='Search countries'
           className={classes.searchInput}
           value={search}
@@ -33,10 +33,10 @@ export default function SearchForm({ onSubmit }) {
           InputProps={{ role: 'searchbox' }}
         />
 
-        <Button type='submit' variant='contained' color='primary'>
+        <SubmitButton>
           Search
-        </Button>
+        </SubmitButton>
       </Box>
-    </form>
+    </Form>
   );
 }
