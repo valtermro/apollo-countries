@@ -30,6 +30,9 @@ export const typeDefs = gql`
 `;
 
 export const typePolicies = {
+  Flag: {
+    keyFields: ['svgFile']
+  },
   Query: {
     fields: {
       appState(current = { isLoadingCountries: true }) {
