@@ -1,6 +1,6 @@
 import { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/client/testing';
-import { render as _render, act, cleanup } from '@testing-library/react';
+import { render as _render, act, cleanup, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Details from './Details';
 import { GET_APP_STATE, GET_COUNTRY } from '../../graphql/queries';
@@ -143,4 +143,49 @@ describe('Details page', () => {
     const editEl = root.queryByRole('button', { name: /edit/i });
     expect(editEl).toBeNull();
   });
+
+  it('closes the edit form when it is submitted', async () => {
+    const Mocked = createMock({});
+    const root = render(<Mocked />);
+
+    await act(async () => await waitLoad());
+    userEvent.click(root.queryByRole('button'));
+    await act(async () => await waitLoad());
+    fireEvent.submit(root.queryByRole('form'));
+
+    root.getByRole('button', { name: /edit/i });
+    expect(root.queryByRole('form')).toBeNull();
+  });
+
+  // TODO: é um teste importante mas precisa de uma estrutura de mock mais adequada
+  // it('updates the country data when the edit form is submitted', async () => {
+  //   const Mocked = createMock({});
+  //   const root = render(<Mocked />);
+
+  //   await act(async () => await waitLoad());
+  //   userEvent.click(root.queryByRole('button'));
+  //   await act(async () => await waitLoad());
+
+  //   const formEl = root.queryByRole('form');
+  //   const flagUrlInput = root.getByRole('textbox', { name: /flag url/i });
+  //   const nameInput = root.getByRole('textbox', { name: /name/i });
+  //   const capitalInput = root.getByRole('textbox', { name: /capital/i });
+  //   const areaInput = root.getByRole('textbox', { name: /area/i });
+  //   const populationInput = root.getByRole('textbox', { name: /population/i });
+  //   const tldsInput = root.getByRole('textbox', { name: /tlds/i });
+
+  //   clearAndType(flagUrlInput, '/1.svg');
+  //   clearAndType(nameInput, 'New Country Name');
+  //   clearAndType(capitalInput, 'New Capital Name');
+  //   clearAndType(areaInput, '42');
+  //   clearAndType(populationInput, '43');
+  //   clearAndType(tldsInput, '.nt,nt1');
+  //   fireEvent.submit(formEl);
+
+  //   root.getByText('Name: New Country Name');
+  //   root.getByText('Capital: New Capital Name');
+  //   root.getByText('Area: 42 km²');
+  //   root.getByText('Population: 43');
+  //   root.getByText('TLDs: .nt, .nt1');
+  // });
 });

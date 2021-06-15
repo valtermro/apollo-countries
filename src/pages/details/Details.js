@@ -30,7 +30,12 @@ function EditSection({ editing, country, onClickEdit, onSubmit, onCancel }) {
           <Typography variant='h3'>
             Editing country {country.code}
           </Typography>
-          <EditCountryForm country={country} onSubmit={onSubmit} onCancel={onCancel} />
+
+          <EditCountryForm
+            country={country}
+            onSubmit={onSubmit}
+            onCancel={onCancel}
+          />
         </Box>
       )}
     </Box>
@@ -38,7 +43,7 @@ function EditSection({ editing, country, onClickEdit, onSubmit, onCancel }) {
 }
 
 export default function Details({ match: { params } }) {
-  const { data: { appState } = {} } = useQuery(GET_APP_STATE);
+  const { data: { appState } = {}, client } = useQuery(GET_APP_STATE);
   const { data: { country } = {}, loading } = useQuery(GET_COUNTRY, {
     variables: { id: params.id }
   });
@@ -49,7 +54,22 @@ export default function Details({ match: { params } }) {
   }
 
   function handleEditSubmit(data) {
-    // TODO
+    const countryData = {
+      ...country,
+      name: data.name,
+      capital: data.capital,
+      area: parseFloat(data.area),
+      population: parseFloat(data.population),
+      flag: { url: data.flagUrl },
+      topLevelDomains: data.tlds.map(name => ({ name }))
+    };
+
+    client.writeQuery({
+      query: GET_COUNTRY,
+      data: { country: countryData }
+    });
+
+    toggleIsEditingCountry();
   }
 
   return (
