@@ -42,7 +42,7 @@ export default function Card({ country }) {
           title={country.name}
         />
         <CardContent>
-          <Typography variant='h3'>
+          <Typography component='p' variant='h3'>
             Capital: {country.capital || 'N/A'}
           </Typography>
         </CardContent>

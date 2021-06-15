@@ -12,15 +12,13 @@ export default function EditPanel({ editing, country, onClickEdit, onSubmit, onC
         </Box>
       ) : (
         <Box>
-          <Typography variant='h3'>
-            Editing country {country.code}
+          <Typography variant='h2'>
+            Edit country {country.code}
           </Typography>
 
-          <EditForm
-            country={country}
-            onSubmit={onSubmit}
-            onCancel={onCancel}
-          />
+          <Box marginTop={2}>
+            <EditForm country={country} onSubmit={onSubmit} onCancel={onCancel} />
+          </Box>
         </Box>
       )}
     </Box>

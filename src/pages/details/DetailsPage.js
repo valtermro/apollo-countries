@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { AppBar, Toolbar, Box, Container } from '@material-ui/core';
-import { Anchor, PageMessage } from '../../components';
+import { Anchor, PageMessage, VisuallyHidden } from '../../components';
 import { GET_APP_STATE, GET_COUNTRY } from '../../graphql/queries';
 import DetailsPanel from './components/DetailsPanel';
 import EditPanel from './components/EditPanel';
@@ -38,6 +38,10 @@ export default function DetailsPage({ match: { params } }) {
 
   return (
     <>
+      <VisuallyHidden>
+        <h1>Country details</h1>
+      </VisuallyHidden>
+
       <AppBar color='default'>
         <Container>
           <Toolbar>
