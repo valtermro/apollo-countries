@@ -1,41 +1,28 @@
 import { useState } from 'react';
-import { Box, makeStyles } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { Form, TextInput, SubmitButton } from '../../components/form';
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    height: '100%'
-  },
-  searchInput: {
-    marginRight: 8
-  }
-});
 
 export default function SearchForm({ onSubmit }) {
   const [search, setSearch] = useState('');
-  const classes = useStyles();
 
   function handleSubmit() {
     onSubmit(search);
   }
 
   return (
-    <Form className={classes.root} role='search' name='Search countries' onSubmit={handleSubmit}>
-      <Box display='flex' height='100%'>
+    <Form role='search' name='Search countries' onSubmit={handleSubmit}>
+      <Box display='flex' alignItems='center'>
         <TextInput
+          type='search'
           label='Search countries'
-          className={classes.searchInput}
           value={search}
           onChange={e => setSearch(e.target.value)}
-          variant='filled'
-          fullWidth={true}
-          InputProps={{ role: 'searchbox' }}
         />
 
-        <SubmitButton>
-          Search
-        </SubmitButton>
+        <Box display='flex' height='56px' marginTop='8px'>
+          <SubmitButton minWidth='auto'>Search</SubmitButton>
+        </Box>
       </Box>
     </Form>
   );

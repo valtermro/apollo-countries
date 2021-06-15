@@ -7,9 +7,9 @@ export default function Form({ onSubmit, ...props }) {
 
   return (
     <form
+      aria-label={props.name}
       noValidate={true}
       onSubmit={handleSubmit}
-      aria-label={props.name}
       {...props}
     />
   );
