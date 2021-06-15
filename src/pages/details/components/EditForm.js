@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box } from '@material-ui/core';
-import { Form, TextInput, SubmitButton, CancelButton } from '../../components/form';
+import { Form, TextInput, SubmitButton, CancelButton } from '../../../components/form';
 
 function countryToValues(country) {
   return {
@@ -23,7 +23,7 @@ function validate(data) {
   return Object.keys(errors).length > 0 ? errors: null;
 }
 
-export default function EditCountryForm({ country, onSubmit, onCancel }) {
+export default function EditForm({ country, onSubmit, onCancel }) {
   const [values, setValues] = useState(countryToValues(country));
   const [errors, setErrors] = useState({});
 

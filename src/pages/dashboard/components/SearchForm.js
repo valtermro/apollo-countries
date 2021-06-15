@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Box } from '@material-ui/core';
-import { Form, TextInput, SubmitButton } from '../../components/form';
-
+import { Form, TextInput, SubmitButton } from '../../../components/form';
 
 export default function SearchForm({ onSubmit }) {
   const [search, setSearch] = useState('');

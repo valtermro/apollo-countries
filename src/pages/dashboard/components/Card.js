@@ -1,9 +1,8 @@
 import {
-  Box, Typography,
-  Card, CardHeader, CardMedia, CardContent, CardActions,
+  Box, Typography, Card as MuiCard, CardHeader, CardMedia, CardContent, CardActions,
   makeStyles
 } from '@material-ui/core';
-import { Anchor } from '../../components';
+import { Anchor } from '../../../components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,22 +20,16 @@ const useStyles = makeStyles(theme => ({
       width: '360px',
     }
   },
-  header: {
-    //
-  },
-  content: {
-    //
-  },
   actions: {
     justifyContent: 'flex-end'
   }
 }));
 
-export default function CountryCard({ country }) {
+export default function Card({ country }) {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <MuiCard className={classes.root}>
       <CardMedia
         className={classes.flagImage}
         component='img'
@@ -46,10 +39,9 @@ export default function CountryCard({ country }) {
 
       <Box flex={1}>
         <CardHeader
-          className={classes.header}
           title={country.name}
         />
-        <CardContent className={classes.content}>
+        <CardContent>
           <Typography variant='h3'>
             Capital: {country.capital || 'N/A'}
           </Typography>
@@ -61,6 +53,6 @@ export default function CountryCard({ country }) {
           </Anchor>
         </CardActions>
       </Box>
-    </Card>
+    </MuiCard>
   );
 }

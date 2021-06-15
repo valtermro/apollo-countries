@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
   title: {
-    fontSize: '38px',
+    fontSize: '30px',
     marginBottom: '10px'
   },
   toHomeLink: {
@@ -17,8 +17,8 @@ export default function PageNotFound() {
   return (
     <Container>
       <Box padding={10} textAlign='center'>
-        <Typography className={classes.title}>
-          Page not found
+        <Typography className={classes.title} variant='h2'>
+          There's nothing here.
         </Typography>
 
         <Link className={classes.toHomeLink} to='/'>

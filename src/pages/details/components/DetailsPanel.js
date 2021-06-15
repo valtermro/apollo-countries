@@ -1,9 +1,6 @@
 import { Box, Typography, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles({
-  root: {
-    //
-  },
   flag: {
     display: 'block',
     maxWidth: '60%',
@@ -16,11 +13,11 @@ function renderOrNa(obj, mapper = p => p) {
   return obj ? mapper(obj) : 'N/A';
 }
 
-export default function CountryDetails({ country }) {
+export default function DetailsPanel({ country }) {
   const classes = useStyles();
 
   return (
-    <Box className={classes.root}>
+    <Box>
       <img
         className={classes.flag}
         src={country.flag.url}

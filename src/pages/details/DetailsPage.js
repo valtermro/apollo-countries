@@ -1,48 +1,12 @@
 import { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { AppBar, Toolbar, Box, Button, Container, Typography } from '@material-ui/core';
-import { Anchor } from '../../components';
-import CountryDetails from './CountryDetails';
-import EditCountryForm from './EditCountryForm';
+import { AppBar, Toolbar, Box, Container } from '@material-ui/core';
+import { Anchor, PageMessage } from '../../components';
 import { GET_APP_STATE, GET_COUNTRY } from '../../graphql/queries';
+import DetailsPanel from './components/DetailsPanel';
+import EditPanel from './components/EditPanel';
 
-function Message({ text }) {
-  return (
-    <Box marginTop={10}>
-      <Typography component='p' variant='h1' align='center'>
-        {text}
-      </Typography>
-    </Box>
-  );
-}
-
-function EditSection({ editing, country, onClickEdit, onSubmit, onCancel }) {
-  return (
-    <Box marginTop={4}>
-      {!editing ? (
-        <Box display='flex' justifyContent='flex-end'>
-          <Button variant='contained' color='secondary' onClick={onClickEdit}>
-            Edit
-          </Button>
-        </Box>
-      ) : (
-        <Box>
-          <Typography variant='h3'>
-            Editing country {country.code}
-          </Typography>
-
-          <EditCountryForm
-            country={country}
-            onSubmit={onSubmit}
-            onCancel={onCancel}
-          />
-        </Box>
-      )}
-    </Box>
-  );
-}
-
-export default function Details({ match: { params } }) {
+export default function DetailsPage({ match: { params } }) {
   const { data: { appState } = {}, client } = useQuery(GET_APP_STATE);
   const { data: { country } = {}, loading } = useQuery(GET_COUNTRY, {
     variables: { id: params.id }
@@ -88,12 +52,12 @@ export default function Details({ match: { params } }) {
       <Container>
         <Box display='flex' justifyContent='center' flexWrap='wrap'>
           {appState?.isLoadingCountries || loading ? (
-            <Message text='Loading...' />
+            <PageMessage text='Loading...' />
           ) : (
             <Box width='100%' maxWidth='680px' marginTop={4}>
-              <CountryDetails country={country} />
+              <DetailsPanel country={country} />
 
-              <EditSection
+              <EditPanel
                 editing={isEditingCountry}
                 country={country}
                 onSubmit={handleEditSubmit}

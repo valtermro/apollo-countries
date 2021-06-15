@@ -1,21 +1,21 @@
 import { within, cleanup } from '@testing-library/react';
-import { renderWithRouter } from '../../../testing/utils/react';
-import { bra, usa } from '../../../testing/fixtures/countries';
-import CountryCardList from './CountryCardList';
+import { renderWithRouter } from '../../../../testing/utils/react';
+import { bra, usa } from '../../../../testing/fixtures/countries';
+import CardList from './CardList';
 
-describe('CountryCardList', () => {
+describe('Country CardList', () => {
   afterEach(cleanup);
 
   it('renders an empty component when there a no countries', () => {
     const countries = [];
-    const root = renderWithRouter(<CountryCardList countries={countries} />);
+    const root = renderWithRouter(<CardList countries={countries} />);
 
     root.getByText('Nothing here.');
   });
 
   it('renders the card list where there are countries', () => {
     const countries = [bra, usa];
-    const root = renderWithRouter(<CountryCardList countries={countries} />);
+    const root = renderWithRouter(<CardList countries={countries} />);
 
     root.queryByRole('list');
     const listItems = root.queryAllByRole('listitem');

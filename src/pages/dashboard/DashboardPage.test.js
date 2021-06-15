@@ -6,7 +6,7 @@ import { createQueryMock } from '../../../testing/mocking/apollo';
 import { are, bra, brb, usa } from '../../../testing/fixtures/countries';
 import { renderWithRouter, waitLoad } from '../../../testing/utils/react';
 import { GET_COUNTRIES } from '../../graphql/queries';
-import Dashboard from './Dashboard';
+import Dashboard from './DashboardPage';
 
 function createMock({ networkError, graphQlErrors, isLoadingCountries = false }) {
   const queryMocks = createQueryMock({ isLoadingCountries });
@@ -49,7 +49,7 @@ function createMock({ networkError, graphQlErrors, isLoadingCountries = false })
 
 }
 
-describe('Dashboard', () => {
+describe('Dashboard page', () => {
   const loadingText = 'Loading...';
   const loadErrorText = 'Failed to load.';
 

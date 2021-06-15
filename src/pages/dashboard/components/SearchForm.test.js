@@ -2,7 +2,7 @@ import { render, within, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SearchForm from './SearchForm';
 
-describe('SearchForm', () => {
+describe('Country SearchForm', () => {
   afterEach(cleanup);
 
   it('renders a search form', () => {

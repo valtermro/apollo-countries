@@ -4,14 +4,14 @@ import userEvent from '@testing-library/user-event';
 import { bra } from '../../../testing/fixtures/countries';
 import { createQueryMock } from '../../../testing/mocking/apollo';
 import { renderWithRouter, waitLoad } from '../../../testing/utils/react';
-import Details from './Details';
+import DetailsPage from './DetailsPage';
 
 function createMock({ isLoadingCountries = false }) {
   const queryMocks = createQueryMock({ isLoadingCountries, country: bra });
 
   return () => (
     <MockedProvider resolvers={queryMocks.resolvers} mocks={queryMocks.mocks}>
-      <Details match={{ params: { id: bra.id } }} />
+      <DetailsPage match={{ params: { id: bra.id } }} />
     </MockedProvider>
   );
 }

@@ -1,5 +1,5 @@
 import { Box, List, ListItem, Typography } from '@material-ui/core';
-import CountryCard from './CountryCard';
+import Card from './Card';
 
 function Empty() {
   return (
@@ -11,7 +11,7 @@ function Empty() {
   );
 }
 
-export default function CountryCardList({ countries }) {
+export default function CardList({ countries }) {
   if (!countries?.length)
     return <Empty />;
 
@@ -19,7 +19,7 @@ export default function CountryCardList({ countries }) {
     <List>
       {countries.map(country => (
         <ListItem key={country.code}>
-          <CountryCard country={country} />
+          <Card country={country} />
         </ListItem>
       ))}
     </List>

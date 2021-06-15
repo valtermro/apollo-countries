@@ -1,7 +1,7 @@
 import { render, fireEvent, cleanup } from '@testing-library/react';
-import { bra } from '../../../testing/fixtures/countries';
-import { clearAndTypeIn } from '../../../testing/utils/react';
-import EditCountryForm from './EditCountryForm';
+import { bra } from '../../../../testing/fixtures/countries';
+import { clearAndTypeIn } from '../../../../testing/utils/react';
+import EditForm from './EditForm';
 
 function getInputs(root) {
   return {
@@ -34,11 +34,11 @@ function countryToInputValues(country) {
   };
 }
 
-describe('EditCountryForm', () => {
+describe('Edit country form', () => {
   beforeEach(cleanup);
 
   it('renders the form', () => {
-    const root = render(<EditCountryForm country={bra} />);
+    const root = render(<EditForm country={bra} />);
 
     root.getByRole('form', { name: /edit country/i });
     root.getByRole('button', { name: /save/i });
@@ -47,7 +47,7 @@ describe('EditCountryForm', () => {
   });
 
   it('Initializes all fields with the current values', () => {
-    const root = render(<EditCountryForm country={bra} />);
+    const root = render(<EditForm country={bra} />);
     const inputs = getInputs(root);
     const values = countryToInputValues(bra);
 
@@ -57,7 +57,7 @@ describe('EditCountryForm', () => {
 
   it('submits with the new values', () => {
     const onSubmit = jest.fn();
-    const root = render(<EditCountryForm country={bra} onSubmit={onSubmit} />);
+    const root = render(<EditForm country={bra} onSubmit={onSubmit} />);
     const newValues = {
       flagUrl: '/new-flag-url.svg',
       name: 'New Name',
@@ -83,7 +83,7 @@ describe('EditCountryForm', () => {
 
   it('dispatches the cancel event', () => {
     const onCancel = jest.fn();
-    const root = render(<EditCountryForm country={bra} onCancel={onCancel} />);
+    const root = render(<EditForm country={bra} onCancel={onCancel} />);
 
     fireEvent.click(root.getByRole('button', { name: /cancel/i }));
 
@@ -93,7 +93,7 @@ describe('EditCountryForm', () => {
 
   it('resets the input values when editing is canceled', () => {
     const onCancel = () => { };
-    const root = render(<EditCountryForm country={bra} onCancel={onCancel} />);
+    const root = render(<EditForm country={bra} onCancel={onCancel} />);
     const oldValues = countryToInputValues(bra);
     const newValues = {
       flagUrl: '/new-flag-url.svg',
@@ -121,7 +121,7 @@ describe('EditCountryForm', () => {
     }));
 
     const onSubmit = jest.fn();
-    const root = render(<EditCountryForm country={bra} onSubmit={onSubmit} />);
+    const root = render(<EditForm country={bra} onSubmit={onSubmit} />);
     const formEl = root.queryByRole('form');
     const inputs = getInputs(root);
 
@@ -143,7 +143,7 @@ describe('EditCountryForm', () => {
     }));
 
     const onSubmit = jest.fn();
-    const root = render(<EditCountryForm country={bra} onSubmit={onSubmit} />);
+    const root = render(<EditForm country={bra} onSubmit={onSubmit} />);
     const formEl = root.queryByRole('form');
     const inputs = getInputs(root);
     let validCallCount = 0;
