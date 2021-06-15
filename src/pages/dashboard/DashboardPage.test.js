@@ -46,7 +46,6 @@ function createMock({ networkError, graphQlErrors, isLoadingCountries = false })
       error: networkError
     };
   };
-
 }
 
 describe('Dashboard page', () => {
