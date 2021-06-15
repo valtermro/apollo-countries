@@ -1,59 +1,50 @@
 import { render } from '@testing-library/react';
+import { bra } from '../../../testing/fixtures/countries';
 import CountryDetails from './CountryDetails';
 
 describe('CountryDetails', () => {
-  const country = {
-    id: '1',
-    code: 'CD1',
-    name: 'Country 1',
-    capital: 'Capital 1',
-    area: 42000,
-    population: 42000000,
-    flag: { url: 'flag1.svg' },
-    topLevelDomains: [{ name: '.ct' }, { name: '.ct.br' }]
-  };
-
   it('renders the flag', () => {
-    const root = render(<CountryDetails country={country} />);
+    const root = render(<CountryDetails country={bra} />);
 
     const imgEl = root.getByRole('img');
-    expect(imgEl).toHaveAttribute('src', country.flag.url);
-    expect(imgEl).toHaveAttribute('alt', `${country.name}'s flag`);
+    expect(imgEl).toHaveAttribute('src', bra.flag.url);
+    expect(imgEl).toHaveAttribute('alt', `${bra.name}'s flag`);
   });
 
   it('displays the name', () => {
-    const root = render(<CountryDetails country={country} />);
+    const root = render(<CountryDetails country={bra} />);
 
-    root.getByText('Name: Country 1');
+    root.getByText(`Name: ${bra.name}`);
   });
 
   it('displays the capital name, if available', () => {
-    const root = render(<CountryDetails country={country} />);
+    const root = render(<CountryDetails country={bra} />);
 
-    root.getByText('Capital: Capital 1');
+    root.getByText(`Capital: ${bra.capital}`);
   });
 
   it('displays a placeholder if the capital name is not available', () => {
-    const root = render(<CountryDetails country={{ ...country, capital: null }} />);
+    const root = render(<CountryDetails country={{ ...bra, capital: null }} />);
 
     root.getByText('Capital: N/A');
   });
 
   it('displays the area', () => {
-    const root = render(<CountryDetails country={country} />);
+    const root = render(<CountryDetails country={bra} />);
 
-    root.getByText('Area: 42,000 km²');
+    root.getByText(`Area: ${bra.area.toLocaleString()} km²`);
   });
 
   it('displays the population', () => {
-    const root = render(<CountryDetails country={country} />);
+    const root = render(<CountryDetails country={bra} />);
 
-    root.getByText('Population: 42,000,000');
+    root.getByText(`Population: ${bra.population.toLocaleString()}`);
   });
 
-  it('displays the top level domains separated by commas', () => {
-    const root = render(<CountryDetails country={country} />);
+  it('displays a comma separated list of the top level domains', () => {
+    const topLevelDomains = [{ name: '.br' }, { name: '.com.br' }];
+    const root = render(<CountryDetails country={{ ...bra, topLevelDomains }} />);
 
-    root.getByText('TLDs: .ct, .ct.br');
+    root.getByText('TLDs: .br, .com.br');
   });
 });

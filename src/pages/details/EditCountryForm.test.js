@@ -1,59 +1,44 @@
 import { render, fireEvent, cleanup } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { bra } from '../../../testing/fixtures/countries';
+import { clearAndTypeIn } from '../../../testing/utils/react';
 import EditCountryForm from './EditCountryForm';
 
-describe('EditCountryForm', () => {
-  const country = {
-    id: '1',
-    code: 'CD1',
-    name: 'Country 1',
-    capital: 'Capital 1',
-    area: 42000,
-    population: 42000000,
-    flag: { url: 'flag1.svg' },
-    topLevelDomains: [{ name: '.ct' }, { name: '.ct.br' }]
+function getInputs(root) {
+  return {
+    flagUrl: root.getByRole('textbox', { name: /flag url/i }),
+    name: root.getByRole('textbox', { name: /name/i }),
+    capital: root.getByRole('textbox', { name: /capital/i }),
+    area: root.getByRole('textbox', { name: /area/i }),
+    population: root.getByRole('textbox', { name: /population/i }),
+    tlds: root.getByRole('textbox', { name: /tlds/i })
   };
+}
 
-  function clearAndType(el, value) {
-    userEvent.clear(el);
-    userEvent.type(el, value);
-  }
+function typeInputValues(inputs, values) {
+  clearAndTypeIn(inputs.flagUrl, values.flagUrl);
+  clearAndTypeIn(inputs.name, values.name);
+  clearAndTypeIn(inputs.capital, values.capital);
+  clearAndTypeIn(inputs.area, values.area);
+  clearAndTypeIn(inputs.population, values.population);
+  clearAndTypeIn(inputs.tlds, values.tlds);
+}
 
-  function typeInputValues(inputs, values) {
-    clearAndType(inputs.flagUrl, values.flagUrl);
-    clearAndType(inputs.name, values.name);
-    clearAndType(inputs.capital, values.capital);
-    clearAndType(inputs.area, values.area);
-    clearAndType(inputs.population, values.population);
-    clearAndType(inputs.tlds, values.tlds);
-  }
+function countryToInputValues(country) {
+  return {
+    flagUrl: country.flag.url,
+    name: country.name,
+    capital: country.capital,
+    area: String(country.area),
+    population: String(country.population),
+    tlds: country.topLevelDomains.map(p => p.name).join(',')
+  };
+}
 
-  function countryToInputValues(country) {
-    return {
-      flagUrl: country.flag.url,
-      name: country.name,
-      capital: country.capital,
-      area: String(country.area),
-      population: String(country.population),
-      tlds: country.topLevelDomains.map(p => p.name).join(',')
-    };
-  }
-
-  function getInputs(root) {
-    return {
-      flagUrl: root.getByRole('textbox', { name: /flag url/i }),
-      name: root.getByRole('textbox', { name: /name/i }),
-      capital: root.getByRole('textbox', { name: /capital/i }),
-      area: root.getByRole('textbox', { name: /area/i }),
-      population: root.getByRole('textbox', { name: /population/i }),
-      tlds: root.getByRole('textbox', { name: /tlds/i })
-    };
-  }
-
+describe('EditCountryForm', () => {
   beforeEach(cleanup);
 
   it('renders the form', () => {
-    const root = render(<EditCountryForm country={country} />);
+    const root = render(<EditCountryForm country={bra} />);
 
     root.getByRole('form', { name: /edit country/i });
     root.getByRole('button', { name: /save/i });
@@ -62,9 +47,9 @@ describe('EditCountryForm', () => {
   });
 
   it('Initializes all fields with the current values', () => {
-    const root = render(<EditCountryForm country={country} />);
+    const root = render(<EditCountryForm country={bra} />);
     const inputs = getInputs(root);
-    const values = countryToInputValues(country);
+    const values = countryToInputValues(bra);
 
     for (const [key, input] of Object.entries(inputs))
       expect(input).toHaveValue(values[key]);
@@ -72,13 +57,13 @@ describe('EditCountryForm', () => {
 
   it('submits with the new values', () => {
     const onSubmit = jest.fn();
-    const root = render(<EditCountryForm country={country} onSubmit={onSubmit} />);
+    const root = render(<EditCountryForm country={bra} onSubmit={onSubmit} />);
     const newValues = {
       flagUrl: '/new-flag-url.svg',
       name: 'New Name',
       capital: 'New Capital',
-      population: String(country.population * 2),
-      area: String(country.area * 2),
+      population: String(bra.population * 2),
+      area: String(bra.area * 2),
       tlds: '.ntld1 ,.ntld2, .ntld3'
     };
 
@@ -88,7 +73,7 @@ describe('EditCountryForm', () => {
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledWith({
-      id: country.id,
+      id: bra.id,
       ...newValues,
       population: parseFloat(newValues.population),
       area: parseFloat(newValues.area),
@@ -98,7 +83,7 @@ describe('EditCountryForm', () => {
 
   it('dispatches the cancel event', () => {
     const onCancel = jest.fn();
-    const root = render(<EditCountryForm country={country} onCancel={onCancel} />);
+    const root = render(<EditCountryForm country={bra} onCancel={onCancel} />);
 
     fireEvent.click(root.getByRole('button', { name: /cancel/i }));
 
@@ -108,14 +93,14 @@ describe('EditCountryForm', () => {
 
   it('resets the input values when editing is canceled', () => {
     const onCancel = () => { };
-    const root = render(<EditCountryForm country={country} onCancel={onCancel} />);
-    const oldValues = countryToInputValues(country);
+    const root = render(<EditCountryForm country={bra} onCancel={onCancel} />);
+    const oldValues = countryToInputValues(bra);
     const newValues = {
       flagUrl: '/new-flag-url.svg',
       name: 'New Name',
       capital: 'New Capital',
-      population: String(country.population * 2),
-      area: String(country.area * 2),
+      population: String(bra.population * 2),
+      area: String(bra.area * 2),
       tlds: '.ntld1 ,.ntld2, .ntld3'
     };
 
@@ -128,7 +113,7 @@ describe('EditCountryForm', () => {
   });
 
   it('validates itself', () => {
-    const validData = countryToInputValues(country);
+    const validData = countryToInputValues(bra);
     const fieldInfo = Object.keys(validData).map(key => ({
       key,
       invalid: '',
@@ -136,7 +121,7 @@ describe('EditCountryForm', () => {
     }));
 
     const onSubmit = jest.fn();
-    const root = render(<EditCountryForm country={country} onSubmit={onSubmit} />);
+    const root = render(<EditCountryForm country={bra} onSubmit={onSubmit} />);
     const formEl = root.queryByRole('form');
     const inputs = getInputs(root);
 
@@ -149,7 +134,7 @@ describe('EditCountryForm', () => {
   });
 
   it('resets validation on submit', () => {
-    const validData = countryToInputValues(country);
+    const validData = countryToInputValues(bra);
     const fieldInfo = Object.entries(validData).map(([key, value]) => ({
       key,
       valid: String(value),
@@ -158,7 +143,7 @@ describe('EditCountryForm', () => {
     }));
 
     const onSubmit = jest.fn();
-    const root = render(<EditCountryForm country={country} onSubmit={onSubmit} />);
+    const root = render(<EditCountryForm country={bra} onSubmit={onSubmit} />);
     const formEl = root.queryByRole('form');
     const inputs = getInputs(root);
     let validCallCount = 0;

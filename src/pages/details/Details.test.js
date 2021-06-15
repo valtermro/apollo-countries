@@ -1,64 +1,17 @@
-import { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/client/testing';
-import { render as _render, act, cleanup, fireEvent } from '@testing-library/react';
+import { act, cleanup, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { bra } from '../../../testing/fixtures/countries';
+import { createQueryMock } from '../../../testing/mocking/apollo';
+import { renderWithRouter, waitLoad } from '../../../testing/utils/react';
 import Details from './Details';
-import { GET_APP_STATE, GET_COUNTRY } from '../../graphql/queries';
 
-function render(component) {
-  return _render(
-    <MemoryRouter>
-      {component}
-    </MemoryRouter>
-  );
-}
-
-function waitLoad() {
-  return new Promise(resolve => setTimeout(resolve, 0));
-}
-
-function createMock({ appState = { isLoadingCountries: false } }) {
-  const country = {
-    id: '1',
-    code: 'CA1',
-    name: 'Country 1',
-    capital: 'Capital 1',
-    area: 42000000,
-    population: 42000,
-    topLevelDomains: [{ name: '.ca' }],
-    flag: { url: '/1.svg' }
-  };
-
-  const resolvers = {
-    Query: {
-      country: () => country,
-      appState: () => appState
-    }
-  };
-
-  const mocks = [
-    {
-      request: {
-        query: GET_COUNTRY,
-        variables: { id: '1' }
-      },
-      result: {
-        data: { country }
-      }
-    },
-    {
-      request: {
-        query: GET_APP_STATE
-      },
-      result: {
-        data: { appState }
-      }
-    }
-  ];
+function createMock({ isLoadingCountries = false }) {
+  const queryMocks = createQueryMock({ isLoadingCountries, country: bra });
 
   return () => (
-    <MockedProvider resolvers={resolvers} mocks={mocks}>
-      <Details match={{ params: { id: '1' } }} />
+    <MockedProvider resolvers={queryMocks.resolvers} mocks={queryMocks.mocks}>
+      <Details match={{ params: { id: bra.id } }} />
     </MockedProvider>
   );
 }
@@ -69,8 +22,8 @@ describe('Details page', () => {
   afterEach(cleanup);
 
   it('handles the "loading app state" state', async () => {
-    const Mocked = createMock({ appState: { isLoadingCountries: true }});
-    const root = render(<Mocked />);
+    const Mocked = createMock({ isLoadingCountries: true });
+    const root = renderWithRouter(<Mocked />);
 
     await act(async () => await waitLoad());
 
@@ -79,14 +32,14 @@ describe('Details page', () => {
 
   it('handles the "loading data" state', () => {
     const Mocked = createMock({});
-    const root = render(<Mocked />);
+    const root = renderWithRouter(<Mocked />);
 
     root.getByText(loadingText);
   });
 
   it('renders a link to the dashboard', async () => {
     const Mocked = createMock({});
-    const root = render(<Mocked />);
+    const root = renderWithRouter(<Mocked />);
 
     await act(async () => await waitLoad());
 
@@ -96,16 +49,16 @@ describe('Details page', () => {
 
   it('renders the country details', async () => {
     const Mocked = createMock({});
-    const root = render(<Mocked />);
+    const root = renderWithRouter(<Mocked />);
 
     await act(async () => await waitLoad());
 
-    root.getByText('Name: Country 1');
+    root.getByText(`Name: ${bra.name}`);
   });
 
   it('renders the edit button', async () => {
     const Mocked = createMock({});
-    const root = render(<Mocked />);
+    const root = renderWithRouter(<Mocked />);
 
     await act(async () => await waitLoad());
 
@@ -114,7 +67,7 @@ describe('Details page', () => {
 
   it('does not render the edit form by default', async () => {
     const Mocked = createMock({});
-    const root = render(<Mocked />);
+    const root = renderWithRouter(<Mocked />);
 
     await act(async () => await waitLoad());
 
@@ -123,7 +76,7 @@ describe('Details page', () => {
 
   it('renders the edit form when the edit button is clicked', async () => {
     const Mocked = createMock({});
-    const root = render(<Mocked />);
+    const root = renderWithRouter(<Mocked />);
 
     await act(async () => await waitLoad());
     userEvent.click(root.queryByRole('button'));
@@ -134,7 +87,7 @@ describe('Details page', () => {
 
   it('hides the edit button while editing the country', async () => {
     const Mocked = createMock({});
-    const root = render(<Mocked />);
+    const root = renderWithRouter(<Mocked />);
 
     await act(async () => await waitLoad());
     userEvent.click(root.queryByRole('button'));
@@ -146,7 +99,7 @@ describe('Details page', () => {
 
   it('closes the edit form when it is submitted', async () => {
     const Mocked = createMock({});
-    const root = render(<Mocked />);
+    const root = renderWithRouter(<Mocked />);
 
     await act(async () => await waitLoad());
     userEvent.click(root.queryByRole('button'));
@@ -160,7 +113,7 @@ describe('Details page', () => {
   // TODO: é um teste importante mas precisa de uma estrutura de mock mais adequada
   // it('updates the country data when the edit form is submitted', async () => {
   //   const Mocked = createMock({});
-  //   const root = render(<Mocked />);
+  //   const root = renderWithRouter(<Mocked />);
 
   //   await act(async () => await waitLoad());
   //   userEvent.click(root.queryByRole('button'));
