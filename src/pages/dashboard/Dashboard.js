@@ -1,24 +1,9 @@
 import { useState } from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Box, Toolbar, Container, Typography } from '@material-ui/core';
 import SearchForm from './SearchForm';
 import CountryCardList from './CountryCardList';
-
-export const GET_COUNTRIES = gql`
-  query  GetCountries($search: String) {
-    countries: Country(
-      filter: { OR: [{ name_contains: $search }, { alpha3Code_contains: $search }] }
-    ) {
-      id: _id
-      code: alpha3Code
-      name
-      capital
-      flag {
-       url: svgFile
-      }
-    }
-  }
-`;
+import { GET_APP_STATE, GET_COUNTRIES } from '../../graphql/queries';
 
 function Message({ text }) {
   return (
@@ -40,10 +25,9 @@ function HeaderBar({ children, ...props }) {
   );
 }
 
-
 export default function Dashboard() {
   const [searchStr, setSearchStr] = useState('');
-
+  const { data: { appState } = {} } = useQuery(GET_APP_STATE);
   const { data: { countries } = {}, loading, error } = useQuery(
     GET_COUNTRIES,
     { variables: { search: searchStr } }
@@ -56,7 +40,7 @@ export default function Dashboard() {
       </HeaderBar>
 
       <Container>
-        {loading ? (
+        {appState?.isLoadingCountries || loading ? (
           <Message text='Loading...' />
         ) : error ? (
           <Message text='Failed to load.' />

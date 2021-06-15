@@ -1,28 +1,10 @@
 import { useState } from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { AppBar, Toolbar, Box, Button, Container, Typography } from '@material-ui/core';
 import { Anchor } from '../../components';
 import CountryDetails from './CountryDetails';
 import EditCountryForm from './EditCountryForm';
-
-export const GET_COUNTRY = gql`
-  query GetCountry($id: String!) {
-    countries: Country(_id: $id) {
-      id: _id
-      code: alpha3Code
-      name
-      capital
-      population
-      area
-      topLevelDomains {
-        name
-      }
-      flag {
-        url: svgFile
-      }
-    }
-  }
-`;
+import { GET_APP_STATE, GET_COUNTRY } from '../../graphql/queries';
 
 function Message({ text }) {
   return (
@@ -56,10 +38,10 @@ function EditSection({ editing, country, onClickEdit, onSubmit, onCancel }) {
 }
 
 export default function Details({ match: { params } }) {
-  const { data = {}, loading, error } = useQuery(GET_COUNTRY, {
+  const { data: { appState } = {} } = useQuery(GET_APP_STATE);
+  const { data: { country } = {}, loading } = useQuery(GET_COUNTRY, {
     variables: { id: params.id }
   });
-  const [country] = data.countries || [];
   const [isEditingCountry, setIsEditingCountry] = useState(false);
 
   function toggleIsEditingCountry() {
@@ -85,10 +67,8 @@ export default function Details({ match: { params } }) {
 
       <Container>
         <Box display='flex' justifyContent='center' flexWrap='wrap'>
-          {loading ? (
+          {appState?.isLoadingCountries || loading ? (
             <Message text='Loading...' />
-          ) : error ? (
-            <Message text='Failed to load.' />
           ) : (
             <Box width='100%' maxWidth='680px' marginTop={4}>
               <CountryDetails country={country} />

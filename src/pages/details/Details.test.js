@@ -1,9 +1,9 @@
-import { GraphQLError } from 'graphql';
 import { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/client/testing';
 import { render as _render, act, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Details, { GET_COUNTRY } from './Details';
+import Details from './Details';
+import { GET_APP_STATE, GET_COUNTRY } from '../../graphql/queries';
 
 function render(component) {
   return _render(
@@ -17,7 +17,25 @@ function waitLoad() {
   return new Promise(resolve => setTimeout(resolve, 0));
 }
 
-function createMock({ networkError, graphQlErrors }) {
+function createMock({ appState = { isLoadingCountries: false } }) {
+  const country = {
+    id: '1',
+    code: 'CA1',
+    name: 'Country 1',
+    capital: 'Capital 1',
+    area: 42000000,
+    population: 42000,
+    topLevelDomains: [{ name: '.ca' }],
+    flag: { url: '/1.svg' }
+  };
+
+  const resolvers = {
+    Query: {
+      country: () => country,
+      appState: () => appState
+    }
+  };
+
   const mocks = [
     {
       request: {
@@ -25,28 +43,21 @@ function createMock({ networkError, graphQlErrors }) {
         variables: { id: '1' }
       },
       result: {
-        data: {
-          countries: [
-            {
-              id: '1',
-              code: 'CA1',
-              name: 'Country 1',
-              capital: 'Capital 1',
-              population: 42000,
-              area: 42000000,
-              topLevelDomains: [{ name: '.ca' }],
-              flag: { url: '/1.svg' }
-            }
-          ]
-        },
-        errors: graphQlErrors
+        data: { country }
+      }
+    },
+    {
+      request: {
+        query: GET_APP_STATE
       },
-      error: networkError
+      result: {
+        data: { appState }
+      }
     }
   ];
 
   return () => (
-    <MockedProvider mocks={mocks}>
+    <MockedProvider resolvers={resolvers} mocks={mocks}>
       <Details match={{ params: { id: '1' } }} />
     </MockedProvider>
   );
@@ -54,33 +65,23 @@ function createMock({ networkError, graphQlErrors }) {
 
 describe('Details page', () => {
   const loadingText = 'Loading...';
-  const loadErrorText = 'Failed to load.';
 
   afterEach(cleanup);
 
-  it('handles the loading state', () => {
-    const Mocked = createMock({});
+  it('handles the "loading app state" state', async () => {
+    const Mocked = createMock({ appState: { isLoadingCountries: true }});
     const root = render(<Mocked />);
+
+    await act(async () => await waitLoad());
 
     root.getByText(loadingText);
   });
 
-  it('handles network errors', async () => {
-    const Mocked = createMock({ networkError: new Error('Network error') });
+  it('handles the "loading data" state', () => {
+    const Mocked = createMock({});
     const root = render(<Mocked />);
 
-    await act(async () => await waitLoad());
-
-    root.getByText(loadErrorText);
-  });
-
-  it('handles graphql errors', async () => {
-    const Mocked = createMock({ graphQlErrors: [new GraphQLError()] });
-    const root = render(<Mocked />);
-
-    await act(async () => await waitLoad());
-
-    root.getByText(loadErrorText);
+    root.getByText(loadingText);
   });
 
   it('renders a link to the dashboard', async () => {

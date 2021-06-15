@@ -1,6 +1,6 @@
 import ButtonBase from './ButtonBase';
 
-export default function CancelButton(props) {
+export default function SubmitButton(props) {
   return (
     <ButtonBase
       type='submit'

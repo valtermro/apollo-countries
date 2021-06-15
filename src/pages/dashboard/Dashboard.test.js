@@ -3,7 +3,8 @@ import { GraphQLError } from 'graphql';
 import { MockedProvider } from '@apollo/client/testing';
 import { render as _render, act, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Dashboard, { GET_COUNTRIES } from './Dashboard';
+import Dashboard from './Dashboard';
+import { GET_APP_STATE, GET_COUNTRIES } from '../../graphql/queries';
 
 function render(component) {
   return _render(
@@ -17,10 +18,37 @@ function waitLoad() {
   return new Promise(resolve => setTimeout(resolve, 0));
 }
 
-function createMock({ networkError, graphQlErrors }) {
-  const bra = { id: '1', code: 'BRA', name: 'Brazil', capital: '', flag: { url: '/1.svg' } };
-  const arg = { id: '2', code: 'ARG', name: 'Argentina', capital: '', flag: { url: '/2.svg' } };
+function createMock({
+  networkError,
+  graphQlErrors,
+  appState = { isLoadingCountries: false }
+}) {
+  const bra = {
+    id: '1',
+    code: 'BRA',
+    name: 'Brazil',
+    capital: '',
+    area: 1,
+    population: 1,
+    topLevelDomains: [{ name: '.cc' }],
+    flag: { url: '/1.svg' }
+  };
+  const arg = {
+    id: '2',
+    code: 'ARG',
+    name: 'Argentina',
+    capital: '',
+    area: 1,
+    population: 1,
+    topLevelDomains: [{ name: '.cc' }],
+    flag: { url: '/2.svg' }
+  };
 
+  const resolvers = {
+    Query: {
+      appState: () => appState
+    }
+  };
   const mockWithFilter = (search, countries) => {
     return {
       request: {
@@ -43,10 +71,18 @@ function createMock({ networkError, graphQlErrors }) {
     mockWithFilter('Braz', [bra]),
     mockWithFilter('AR', [arg]),
     mockWithFilter('Argen', [arg]),
+    {
+      request: {
+        query: GET_APP_STATE
+      },
+      result: {
+        data: { appState }
+      }
+    }
   ];
 
   return () => (
-    <MockedProvider mocks={mocks}>
+    <MockedProvider resolvers={resolvers} mocks={mocks}>
       <Dashboard />
     </MockedProvider>
   );
@@ -58,7 +94,16 @@ describe('Dashboard', () => {
 
   afterEach(cleanup);
 
-  it('handles the loading state', () => {
+  it('handles the "loading app state" state', async () => {
+    const Mocked = createMock({ appState: { isLoadingCountries: true }});
+    const root = render(<Mocked />);
+
+    await act(async () => await waitLoad());
+
+    root.getByText(loadingText);
+  });
+
+  it('handles the "loading data" state', () => {
     const Mocked = createMock({});
     const root = render(<Mocked />);
 
