@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { AppBar, Toolbar, Box, Container } from '@material-ui/core';
-import { Anchor, PageMessage, VisuallyHidden } from '../../components';
+import { Box, Container } from '@material-ui/core';
+import { Anchor, PageMessage, PageTopbar, VisuallyHidden } from '../../components';
 import { GET_APP_STATE, GET_COUNTRY } from '../../graphql/queries';
 import DetailsPanel from './components/DetailsPanel';
 import EditPanel from './components/EditPanel';
@@ -42,23 +42,16 @@ export default function DetailsPage({ match: { params } }) {
         <h1>Country details</h1>
       </VisuallyHidden>
 
-      <AppBar color='default'>
-        <Container>
-          <Toolbar>
-            <Anchor to='/'>
-              All countries
-            </Anchor>
-          </Toolbar>
-        </Container>
-      </AppBar>
-      <Toolbar />
+      <PageTopbar>
+        <Anchor to='/'>All countries</Anchor>
+      </PageTopbar>
 
       <Container>
-        <Box display='flex' justifyContent='center' flexWrap='wrap'>
+        <Box display='flex' justifyContent='center' flexWrap='wrap' marginBottom={4}>
           {appState?.isLoadingCountries || loading ? (
             <PageMessage text='Loading...' />
           ) : (
-            <Box width='100%' maxWidth='680px' marginTop={4}>
+            <Box width='100%' maxWidth='680px' marginTop={2}>
               <DetailsPanel country={country} />
 
               <EditPanel
