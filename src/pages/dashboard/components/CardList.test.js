@@ -17,7 +17,7 @@ describe('Country CardList', () => {
     const countries = [bra, usa];
     const root = renderWithRouter(<CardList countries={countries} />);
 
-    root.queryByRole('list');
+    root.getByRole('list');
     const listItems = root.queryAllByRole('listitem');
     expect(listItems).toHaveLength(2);
     within(listItems[0]).getByText(bra.name);
