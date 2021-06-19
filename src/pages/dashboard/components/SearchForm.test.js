@@ -9,15 +9,30 @@ describe('Country SearchForm', () => {
     const root = render(<SearchForm />);
 
     const formEl = root.getByRole('search');
-    within(formEl).getByRole('searchbox');
+    const form = within(formEl);
+    form.getByRole('searchbox');
+    form.getByRole('button', { name: /search/i });
   });
 
-  it('dispatches a submit event with the search string as argument', () => {
+  it('dispatches a submit event with the search string as argument (enter key)', () => {
     const onSubmitSearch = jest.fn();
     const root = render(<SearchForm onSubmit={onSubmitSearch} />);
 
     const searchboxEl = root.queryByRole('searchbox');
     userEvent.type(searchboxEl, 'BRA{enter}');
+
+    expect(onSubmitSearch).toHaveBeenCalledTimes(1);
+    expect(onSubmitSearch).toHaveBeenCalledWith('BRA');
+  });
+
+  it('dispatches a submit event with the search string as argument (submit button)', () => {
+    const onSubmitSearch = jest.fn();
+    const root = render(<SearchForm onSubmit={onSubmitSearch} />);
+
+    const searchboxEl = root.queryByRole('searchbox');
+    const buttonEl = root.getByRole('button', { name: /search/i });
+    userEvent.type(searchboxEl, 'BRA');
+    userEvent.click(buttonEl);
 
     expect(onSubmitSearch).toHaveBeenCalledTimes(1);
     expect(onSubmitSearch).toHaveBeenCalledWith('BRA');
