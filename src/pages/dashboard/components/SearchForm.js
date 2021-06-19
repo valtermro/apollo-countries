@@ -16,7 +16,7 @@ export default function SearchForm({ onSubmit }) {
           type='search'
           label='Search countries'
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onValueChange={setSearch}
         />
 
         <Box display='flex' height='56px' marginTop='8px'>
